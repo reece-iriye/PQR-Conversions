@@ -1,8 +1,8 @@
 # **Protein-Ligland-Binded-PQR-Generator**
 
-Script for PQR file generation for protein-ligland bonding PDB-Bind+ data. Requires directory structure for data.
+Instructions for PQR file generation for protein-ligland binding using data from [PDB-Bind+](https://www.pdbbind-plus.org.cn/data/search). Requires PDB files to be downloaded into a `data/pdbbind/<PDB_ID>` directory, where `<PDB_ID>` reflects the complex that is being analyzed. See how I organized the `10gs` directory. 
 
-## **Set-Up**
+## **Code Set-Up**
 
 Create a `conda` environment, activate the environment, and install all the required packages. The `pdb2pqr` package works in Python 3.8 - Python 3.11 as of 2/18/2024, so any version in this range is good to work with.
 
@@ -27,6 +27,8 @@ pdb2pqr --ff=AMBER ./data/pdbbind/<PDB_ID>/<FILENAME>.pdb ./data/generated/<PDB_
 ```
 
 Also, instructions for `pdb2pqr` command line tools can be found [here](https://pdb2pqr.readthedocs.io/en/latest/using/index.html).
+
+Running the `pdb2pqr` command above generates our PQR files!
 
 ## **Examples**
 
@@ -73,4 +75,4 @@ Are Exclusively from both?: False
 Total not in subset:  1423
 ```
 
-Our hypothesis is false. The `protein-ligand.pqr` file contains altered data but still contains some of the same atomic data when binding happens between the protein from `protein.pqr` and the ligand from `ligand.pqr`.
+Our hypothesis is false. The `protein-ligand.pqr` file contains altered data but still contains some of the same atomic data when binding happens between the protein from `protein.pqr` and the ligand from `ligand.pqr`. While the `protein.pqr` and `protein-ligand.pqr` files contain the exact same number of atoms, the data for these atoms is different.
