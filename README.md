@@ -59,11 +59,18 @@ Running these commands yielded the following output:
 OUTPUT:
 
 ./data/generated/10gs/protein.pqr contains 6534 atoms.
-./data/generated/10gs/pocket-ligland.pqr contains 814 atoms.
-./data/generated/10gs/protein-ligland.pqr contains 6534 atoms.
+./data/generated/10gs/pocket-ligand.pqr contains 814 atoms.
+./data/generated/10gs/protein-ligand.pqr contains 6534 atoms.
+
+Protein-ligand file contains data exclusively from protein PQR file?: False
+Number of lines different in these two files: 1068
+
+Protein-ligand file contains data exclusively from ligand PQR file?: False
+Number of lines different in these two files: 355
 
 Are Subsets?: False
 Are Exclusively from both?: False
-Total not in subset:  5784
+Total not in subset:  1423
 ```
 
+Our hypothesis is false. The `protein-ligand.pqr` file contains altered data but still contains some of the same atomic data when binding happens between the protein from `protein.pqr` and the ligand from `ligand.pqr`.
