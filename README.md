@@ -20,10 +20,10 @@ pbq2pqr --help
 
 ## **Instructions**
 
-To generate PQR file for a protein from the Protein Data Bank with a certain PDB ID, run the command below and make sure to specify the `<PDB_ID>`, and if needed, use a different forcefield:
+To generate PQR file for a protein from the Protein Data Bank with a certain PDB ID, run the command below and make sure to specify the `<PDB_ID>` and `<FILENAME>`, and if needed, use a different forcefield:
 
 ```{bash}
-pdb2pqr --ff=AMBER ./data/pdbbind/<PDB_ID>/protein.pdb ./data/generated/<PDB_ID>/protein.pqr
+pdb2pqr --ff=AMBER ./data/pdbbind/<PDB_ID>/<FILENAME>.pdb ./data/generated/<PDB_ID>/<FILENAME>.pqr
 ```
 
 Also, instructions for `pdb2pqr` command line tools can be found [here](https://pdb2pqr.readthedocs.io/en/latest/using/index.html).
