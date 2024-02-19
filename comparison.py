@@ -47,10 +47,16 @@ def compare_files(
             ligand_lines: List[str] = ligand_file.readlines()
             complex_lines: List[str] = complex_file.readlines()
 
-            protein_atom_lines = [line for line in protein_lines if line.startswith("ATOM")]
-            ligand_atom_lines = [line for line in ligand_lines if line.startswith("ATOM")]
-            complex_atom_lines = [line for line in complex_lines if line.startswith("ATOM")]
-            
+            # Filter down to lines that contain just atoms
+            # Make sure that each string doesn't include an index number by removing the first 13 characters,
+            #   while still maintaining the rest of the line
+            protein_atom_lines = [line[13:] for line in protein_lines if line.startswith("ATOM")]
+            ligand_atom_lines = [line[13:] for line in ligand_lines if line.startswith("ATOM")]
+            complex_atom_lines = [line[13:] for line in complex_lines if line.startswith("ATOM")]            
+
+            print(f"{protein_file_path} contains {len(protein_atom_lines)} atoms.")
+            print(f"{ligand_file_path} contains {len(ligand_atom_lines)} atoms.")
+            print(f"{complex_file_path} contains {len(complex_atom_lines)} atoms.\n")
             
             # Check if protein_atom_lines and ligand_atom_lines are subsets of complex_atom_lines
             are_subsets = (
@@ -59,18 +65,42 @@ def compare_files(
             )
 
             # Check if complex_atom_lines contains exclusively lines from protein_atom_lines and ligand_atom_lines
-            exclusively_from_both = (
-                _contains_exclusively(
-                    sublist=protein_atom_lines + ligand_atom_lines, 
-                    mainlist=complex_atom_lines,
-                )
+            exclusively_from_both = _contains_exclusively(
+                sublist  = protein_atom_lines + ligand_atom_lines, 
+                mainlist = complex_atom_lines,
             )
+            
+            exclusively_from_protein = _contains_exclusively(
+                sublist  = protein_atom_lines,
+                mainlist = complex_atom_lines,
+            )
+
+            exclusively_from_ligand = _contains_exclusively(
+                sublist  = ligand_atom_lines,
+                mainlist = complex_atom_lines,
+            )
+
+            print("Protein-ligand file contains data exclusively from protein PQR file?:", str(exclusively_from_protein))
+            count_different_protein_lines = len([
+                line 
+                for line in protein_atom_lines 
+                if line not in complex_atom_lines
+            ])
+            print(f"Number of lines different in these two files: {count_different_protein_lines}", end="\n\n")
+
+            print("Protein-ligand file contains data exclusively from ligand PQR file?:", str(exclusively_from_ligand))
+            count_different_ligand_lines = len([
+                line 
+                for line in ligand_atom_lines
+                if line not in complex_atom_lines
+            ])
+            print(f"Number of lines different in these two files: {count_different_ligand_lines}", end="\n\n")
 
             if not are_subsets and not exclusively_from_both:
                 count_not_in_subset = len([
                     line 
-                    for line in complex_atom_lines 
-                    if line not in protein_atom_lines + ligand_atom_lines
+                    for line in protein_atom_lines + ligand_atom_lines  
+                    if line not in complex_atom_lines 
                 ])
                 return are_subsets, exclusively_from_both, count_not_in_subset
             else:
@@ -85,9 +115,11 @@ if __name__ == "__main__":
     LIGAND_FILE_PATH: str  = sys.argv[2]
     COMPLEX_FILE_PATH: str = sys.argv[3]
 
+    print("\nOUTPUT:\n")
+    
     are_subsets, exclusively_from_both, count_not_in_subset = compare_files(
         protein_file_path = PROTEIN_FILE_PATH, 
-        ligand_file_path = LIGAND_FILE_PATH, 
+        ligand_file_path  = LIGAND_FILE_PATH, 
         complex_file_path = COMPLEX_FILE_PATH,
     )
     print("Are Subsets?:", str(are_subsets))

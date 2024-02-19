@@ -28,3 +28,42 @@ pdb2pqr --ff=AMBER ./data/pdbbind/<PDB_ID>/<FILENAME>.pdb ./data/generated/<PDB_
 
 Also, instructions for `pdb2pqr` command line tools can be found [here](https://pdb2pqr.readthedocs.io/en/latest/using/index.html).
 
+## **Examples**
+
+### **10gs**
+
+Let $P$ denote the set of all atom lines in the `protein.pqr` file.
+
+Let $L$ denote the set of all atom lines in the `pocket-ligand.pqr` file.
+
+Let $C$ denote the set of all atom lines in the `protein-ligand.pqr` file.
+
+**Hypothesis test:** $P \cup L = C$
+
+
+With the `10gs` protein, I ran the following commands:
+```{bash}
+# Run PDB2PQR on protein alone, ligand alone, then the complex
+pdb2pqr --ff=AMBER ./data/pdbbind/10gs/protein.pdb ./data/generated/10gs/protein.pqr
+pdb2pqr --ff=AMBER ./data/pdbbind/10gs/protein-ligand.pdb ./data/generated/10gs/protein-ligand.pqr
+pdb2pqr --ff=AMBER ./data/pdbbind/10gs/pocket-ligand.pdb ./data/generated/10gs/pocket-ligand.pqr
+
+# Run script that checks if the atoms in the alone protein and ligand PQR files are strictly subsets
+# of the protein-ligand file.
+python comparison.py ./data/generated/10gs/protein.pqr ./data/generated/10gs/pocket-ligand.pqr ./data/generated/10gs/protein-ligand.pqr
+```
+
+Running these commands yielded the following output:
+
+```
+OUTPUT:
+
+./data/generated/10gs/protein.pqr contains 6534 atoms.
+./data/generated/10gs/pocket-ligland.pqr contains 814 atoms.
+./data/generated/10gs/protein-ligland.pqr contains 6534 atoms.
+
+Are Subsets?: False
+Are Exclusively from both?: False
+Total not in subset:  5784
+```
+
