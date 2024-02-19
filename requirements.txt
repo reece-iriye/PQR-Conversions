@@ -1,0 +1,10 @@
+certifi==2024.2.2
+charset-normalizer==3.3.2
+docutils==0.17.1
+idna==3.6
+mmcif-pdbx==2.0.1
+numpy==1.26.4
+pdb2pqr==3.6.2
+propka==3.5.1
+requests==2.31.0
+urllib3==2.2.1
