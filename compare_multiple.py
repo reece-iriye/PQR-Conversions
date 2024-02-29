@@ -2,7 +2,7 @@ import polars as pl
 
 from typing import Dict, Any
 
-def parse_line(line: str) -> Dict[str, Any]:
+def _parse_line(line: str) -> Dict[str, Any]:
     """
     Parse each individual line of the PQR schema.
 
@@ -28,6 +28,14 @@ def parse_line(line: str) -> Dict[str, Any]:
 
 
 def get_polars_pqr_dataframe(file_path: str) -> pl.DataFrame:
+    """
+    Represent PQR file in the form of a Polars DataFrame.
+
+    Args:
+        file_path (str): File path of PQR file.
+    Returns:
+        polars.DataFrame
+    """
     parsed_lines = []
 
     with open(file_path, 'r') as file:
@@ -36,10 +44,9 @@ def get_polars_pqr_dataframe(file_path: str) -> pl.DataFrame:
             if line == "TER\n" or line == "END" or line == "":
                 continue
             elif (line.strip() and not line.startswith('#')):
-                parsed_data = parse_line(line)
+                parsed_data = _parse_line(line)
                 parsed_lines.append(parsed_data)
 
-    # Create a DataFrame
     return pl.DataFrame(parsed_lines)
 
 
