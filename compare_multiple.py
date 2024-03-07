@@ -2,6 +2,7 @@ import polars as pl
 
 from typing import List, Dict, Any
 
+
 def _parse_line(line: str) -> Dict[str, Any]:
     """
     Parse each individual line of the PQR schema.

@@ -129,4 +129,4 @@ if __name__ == "__main__":
         print("Are Exclusively from both?:", str(exclusively_from_both))
         print("Total not in subset: ", str(count_not_in_subset))
     else:
-        print("nothing returned")
+        print("Nothing returned.")
