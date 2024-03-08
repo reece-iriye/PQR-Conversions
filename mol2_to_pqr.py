@@ -133,6 +133,7 @@ def create_atom_info_mapping(pqr_df: pl.DataFrame) -> Dict[str, float]:
 
         if atom_name in atom_info and not isclose(atom_info[atom_name], radius, rel_tol=1e-5):
             print(f"Warning: Multiple radius values found for {atom_name}. Using the first encountered value.")
+        # else:
         elif not atom_name.startswith("H"):
             atom_info[atom_name] = radius
 
@@ -180,7 +181,7 @@ def append_ligand_to_protein_pqr(
         pl.col("y").alias("Y"),
         pl.col("z").alias("Z"),
         pl.col("charge").cast(pl.Float64),  # Cast to match the protein dataframe type
-        pl.col("radius")
+        pl.col("radius"),
     ])
 
     # Append ligand DataFrame to protein DataFrame
@@ -220,10 +221,23 @@ def main() -> None:
     OUTPUT_PQR_FILE: str  = sys.argv[4]
 
     df_ligand_mol2 = convert_mol2_to_polars_dataframe(LIGAND_MOL2_FILE)
+    print(df_ligand_mol2.select(["atom_name", "x", "y", "z"]))
+    input()
+
+    # Check if the coordinates and the atom itself match up to the PQR file
+
     df_protein_pqr = convert_pqr_to_polars_dataframe(PROTEIN_PQR_FILE)
+    print(df_protein_pqr)
+    input()
+
     df_complex_from_pdbbind_pqr = convert_pqr_to_polars_dataframe(COMPLEX_PQR_FILE)
+    print(df_complex_from_pdbbind_pqr)
+    input()
+
 
     atom_info_mapping = create_atom_info_mapping(df_complex_from_pdbbind_pqr)
+    print(atom_info_mapping)
+    input()
 
     df_combined = append_ligand_to_protein_pqr(df_protein_pqr, df_ligand_mol2, atom_info_mapping)
     write_pqr(df_combined, OUTPUT_PQR_FILE)

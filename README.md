@@ -1,6 +1,6 @@
 # **Working with PQR Files Representing Proteins, Ligands, and their Complexes**
 
-Instructions for PQR file generation for protein-ligland binding using data from [PDB-Bind+](https://www.pdbbind-plus.org.cn/data/search). Requires PDB files to be downloaded into a `data/pdbbind/<PDB_ID>` directory, where `<PDB_ID>` reflects the complex that is being analyzed. See how I organized the `10gs` directory. 
+Instructions for PQR file generation for protein-ligland binding using data from [PDB-Bind+](https://www.pdbbind-plus.org.cn/data/search). Requires PDB files to be downloaded into a `data/pdbbind/<PDB_ID>` directory, where `<PDB_ID>` reflects the complex that is being analyzed. See how I organized the `10gs` directory.
 
 ## **Code Set-Up**
 
@@ -76,3 +76,9 @@ Total not in subset:  1423
 ```
 
 Our hypothesis is false. The `protein-ligand.pqr` file contains altered data but still contains some of the same atomic data when binding happens between the protein from `protein.pqr` and the ligand from `ligand.pqr`. While the `protein.pqr` and `protein-ligand.pqr` files contain the exact same number of atoms, the data for these atoms is different.
+
+## **Mol2 to PQR**
+
+```{bash}
+python3 mol2_to_pqr.py ./data/pdbbind/10gs/ligand.mol2 ./data/generated/10gs/protein.pqr ./data/generated/10gs/protein-ligand.pqr ./data/generated/10gs/custom.pqr
+```
