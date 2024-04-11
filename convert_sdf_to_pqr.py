@@ -133,6 +133,7 @@ def convert_sdf_to_pqr(input_file: str, output_file: str) -> None:
     """Convert SDF file to PQR using Open Babel."""
     subprocess.run(["obabel", "-isdf", input_file, "-opqr", "-O", output_file, "--FF", "AMBER"])
 
+
 def update_pqr_radii(input_file: str, output_file: str) -> None:
     """Update the radii in a PQR file based on atom type."""
     with open(input_file, "r") as f:
@@ -145,7 +146,7 @@ def update_pqr_radii(input_file: str, output_file: str) -> None:
                 atom_type = parts[-1]
                 radius = _get_radius(atom_type)
                 if radius != -1:
-                    parts[10] = "{:.6f}".format(radius)
+                    parts[-2] = "{:.6f}".format(radius)
                 f.write(" ".join(parts) + "\n")
             else:
                 f.write(line)
