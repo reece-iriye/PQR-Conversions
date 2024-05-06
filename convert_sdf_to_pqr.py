@@ -2,7 +2,8 @@
 # stored in the file tree
 #
 
-# Then, capture all those file names, then apply command line arguments using
+# Then, in obabel, capture all those file names, then apply command line arguments
+# using a format similar to the following if default args are not adjusted
 """
 obabel -isdf data/pdbbind/{pdbank_id}/{pdbank_id}_ligand.sdf \
        -opqr -Odata/generated/{pdbank_id}/{pdbank_id}_ligand.pqr \
@@ -19,11 +20,16 @@ obabel -isdf data/pdbbind/{pdbank_id}/{pdbank_id}_ligand.sdf \
     # The ZAP9 and BONDI are the preferred PDB2PQR radii. See `mol2_classes.py` for more,
     # which is largely copied from the PDB2PQR internal code.
 
-
+import argparse
+from argparse import Namespace
+import logging
 import os
 import subprocess
 from typing import List, Dict
 from pathlib import Path
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 #: Radii for different atom types.
@@ -196,7 +202,7 @@ def update_pqr_radii(input_file: str, output_file: str) -> None:
                 f.write(line)
 
 
-def process_files(sdf_files: List[Path]) -> None:
+def process_files(sdf_files: List[Path], save_dir: str) -> None:
     """
     Process each .sdf file found.
 
@@ -204,10 +210,12 @@ def process_files(sdf_files: List[Path]) -> None:
     ----------
     sdf_files : List[Path]
         A list of Path objects representing the paths to .sdf files to be processed.
+    save_dir : str
+        The directory where the output PQR files will be saved.
     """
     for sdf_path in sdf_files:
         # Construct the output directory based on the sdf file path
-        output_dir = Path("data/generated") / sdf_path.parent.relative_to("data/pdbbind")
+        output_dir = Path(save_dir) / sdf_path.parent.relative_to("data/pdbbind")
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # Construct input and output file paths
@@ -221,6 +229,16 @@ def process_files(sdf_files: List[Path]) -> None:
         update_pqr_radii(output_file, output_file)
 
 
+def parse_args() -> Namespace:
+    parser = argparse.ArgumentParser(description="Process .sdf files in a directory to generate .pqr files.")
+    parser.add_argument("--input-dir", dest="input_dir", default="data/pdbbind",
+        help="Input directory containing .sdf files (default: data/pdbbind)")
+    parser.add_argument("--output-dir", dest="output_dir", default="data/generated",
+                        help="Output directory for .pqr files (default: data/generated)")
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    sdf_files = find_sdf_files("data/pdbbind")
-    process_files(sdf_files)
+    args = parse_args()
+    sdf_files = find_sdf_files(args.input_dir)
+    process_files(sdf_files, args.output_dir)
