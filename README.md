@@ -97,7 +97,7 @@ chmod +x form_complex_pqr.sh
 Then, run the shell script with the `--directory` argument specifying the root directory containing the subdirectories you want to process:
 
 ```bash
-./form_complex_pqr.sh --directory ./data/generated/<PDB_ID>
+./form_complex_pqr.sh --directory ./data/generated
 ```
 
 The shell script will iterate through each subdirectory at level 1 of the specified root directory and run the `form_complex_pqr.py` script with each subdirectory as the `--directory` argument.
