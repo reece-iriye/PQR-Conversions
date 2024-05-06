@@ -110,7 +110,20 @@ RADII: Dict[str, Dict[str, float]] = {
 
 
 def _get_radius(atom_type: str) -> float:
-    """Get the radius for a given atom type."""
+    """
+    Get the radius for a given atom type.
+
+    Parameters
+    ----------
+    atom_type : str
+        The atom type for which to retrieve the radius.
+
+    Returns
+    -------
+    float
+        The radius corresponding to the given atom type. Returns -1 if the atom type
+        was not found in the predefined radii dictionaries.
+    """
     if atom_type in RADII["zap9"]:
         return RADII["zap9"][atom_type]
     elif atom_type in RADII["bondi"]:
@@ -120,7 +133,19 @@ def _get_radius(atom_type: str) -> float:
 
 
 def find_sdf_files(start_dir: str) -> List[Path]:
-    """Find all .sdf files in the directory tree starting at start_dir."""
+    """
+    Find all .sdf files in the directory tree starting at start_dir.
+
+    Parameters
+    ----------
+    start_dir : str
+        The directory to start searching for .sdf files.
+
+    Returns
+    -------
+    List[Path]
+        A list of Path objects representing the paths to the found .sdf files.
+    """
     sdf_files = [
         Path(root) / file
         for root, dirs, files in os.walk(start_dir)
@@ -130,12 +155,31 @@ def find_sdf_files(start_dir: str) -> List[Path]:
 
 
 def convert_sdf_to_pqr(input_file: str, output_file: str) -> None:
-    """Convert SDF file to PQR using Open Babel."""
+    """
+    Convert SDF file to PQR using Open Babel.
+
+    Parameters
+    ----------
+    input_file : str
+        The relative file path. This will fail if `input_file` is not a proper `.sdf`
+        file.
+    output_file : str
+        Where the output .pqr file will be saved.
+    """
     subprocess.run(["obabel", "-isdf", input_file, "-opqr", "-O", output_file, "--FF", "AMBER"])
 
 
 def update_pqr_radii(input_file: str, output_file: str) -> None:
-    """Update the radii in a PQR file based on atom type."""
+    """
+    Update the radii in a PQR file based on atom type.
+
+    Parameters
+    ----------
+    input_file : str
+        The path to the input PQR file.
+    output_file : str
+        The path where the updated PQR file will be saved.
+    """
     with open(input_file, "r") as f:
         lines = f.readlines()
 
@@ -153,7 +197,14 @@ def update_pqr_radii(input_file: str, output_file: str) -> None:
 
 
 def process_files(sdf_files: List[Path]) -> None:
-    """Process each .sdf file found."""
+    """
+    Process each .sdf file found.
+
+    Parameters
+    ----------
+    sdf_files : List[Path]
+        A list of Path objects representing the paths to .sdf files to be processed.
+    """
     for sdf_path in sdf_files:
         # Construct the output directory based on the sdf file path
         output_dir = Path("data/generated") / sdf_path.parent.relative_to("data/pdbbind")
