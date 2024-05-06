@@ -97,11 +97,12 @@ chmod +x form_complex_pqr.sh
 Then, run the shell script with the `--directory` argument specifying the root directory containing the subdirectories you want to process:
 
 ```bash
-./run_complex_formation.sh --directory /path/to/root/directory
+./form_complex_pqr.sh --directory ./data/generated/<PDB_ID>
 ```
 
-Replace `/path/to/root/directory` with the path to the root directory.
-
 The shell script will iterate through each subdirectory at level 1 of the specified root directory and run the `form_complex_pqr.py` script with each subdirectory as the `--directory` argument.
+
+This script is intended to be used after running the jobs for creating the separate protein `.pqr` files and ligand `.pqr` files in the exact same directory.
+
 
 
