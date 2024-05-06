@@ -1,10 +1,25 @@
 #!/bin/bash
 
-# Base directory containing the atom folders and pdb files.
-SOURCE_DIR="data/pdbbind"
 
-# Base directory for the output PQR files.
-OUTPUT_DIR="data/generated"
+# Default values for SOURCE_DIR and OUTPUT_DIR
+DEFAULT_SOURCE_DIR="data/pdbbind"
+DEFAULT_OUTPUT_DIR="data/generated"
+
+# Parse command line arguments
+for arg in "$@"; do
+    case $arg in
+        --source-dir=*)
+            SOURCE_DIR="${arg#*=}"
+            ;;
+        --output-dir=*)
+            OUTPUT_DIR="${arg#*=}"
+            ;;
+    esac
+done
+
+# Set default values if arguments are not provided
+SOURCE_DIR="${SOURCE_DIR:-$DEFAULT_SOURCE_DIR}"
+OUTPUT_DIR="${OUTPUT_DIR:-$DEFAULT_OUTPUT_DIR}"
 
 # Loop through all subdirectories of SOURCE_DIR
 for ATOM_FOLDER in "$SOURCE_DIR"/*; do
