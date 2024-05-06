@@ -1,4 +1,4 @@
-# **Working with PQR Files Representing Proteins, Ligands, and their Complexes**
+# **Converting Ligand files to PQR Format**
 
 Instructions for PQR file generation for protein-ligland binding using data from [PDB-Bind+](https://www.pdbbind-plus.org.cn/data/search). Requires PDB files to be downloaded into a `data/pdbbind/<PDB_ID>` directory, where `<PDB_ID>` reflects the complex that is being analyzed. See how I organized the `10gs` directory.
 
@@ -12,13 +12,14 @@ conda activate <CONDA_ENV_NAME>
 pip install -r requirements.txt
 ```
 
-After running the commands above, you should have access to the `pdb2pqr` command line arguments. Try running the following command to see if the arguments work:
+After running the commands above, you should have access to the `pdb2pqr` command line arguments, as well as `obabel` command line arguments, which are necessary for most the scripts in this repository. Try running the following command to see if the arguments work:
 
 ```{bash}
 pbq2pqr --help
+obabel --help
 ```
 
-## **Instructions**
+## **Instructions for Converting PDB to PQR**
 
 To generate PQR file for a protein from the Protein Data Bank with a certain PDB ID, run the command below and make sure to specify the `<PDB_ID>` and `<FILENAME>`, and if needed, use a different forcefield:
 
@@ -28,57 +29,42 @@ pdb2pqr --ff=AMBER ./data/pdbbind/<PDB_ID>/<FILENAME>.pdb ./data/generated/<PDB_
 
 Also, instructions for `pdb2pqr` command line tools can be found [here](https://pdb2pqr.readthedocs.io/en/latest/using/index.html).
 
+The format that this repository uses contains a bunch of stored `.pdb` files directly from the PDB-Bind+ website. You are more than welcome to save these instead to a custom directory.
+
 Running the `pdb2pqr` command above generates our PQR files!
 
-## **Examples**
-
-### **10gs**
-
-Let $P$ denote the set of all atom lines in the `protein.pqr` file.
-
-Let $L$ denote the set of all atom lines in the `pocket-ligand.pqr` file.
-
-Let $C$ denote the set of all atom lines in the `protein-ligand.pqr` file.
-
-**Hypothesis test:** $P \cup L = C$
-
+### **Examples**
 
 With the `10gs` protein, I ran the following commands:
 ```{bash}
 # Run PDB2PQR on protein alone, ligand alone, then the complex
 pdb2pqr --ff=AMBER ./data/pdbbind/10gs/protein.pdb ./data/generated/10gs/protein.pqr
-pdb2pqr --ff=AMBER ./data/pdbbind/10gs/protein-ligand.pdb ./data/generated/10gs/protein-ligand.pqr
 pdb2pqr --ff=AMBER ./data/pdbbind/10gs/pocket-ligand.pdb ./data/generated/10gs/pocket-ligand.pqr
-
-# Run script that checks if the atoms in the alone protein and ligand PQR files are strictly subsets
-# of the protein-ligand file.
-python comparison.py ./data/generated/10gs/protein.pqr ./data/generated/10gs/pocket-ligand.pqr ./data/generated/10gs/protein-ligand.pqr
 ```
 
-Running these commands yielded the following output:
+The files are then saved to my file system.
 
+## **Instructions for Converting SDF Files to PQR**
+
+Ensure that Open Babel is properly configured and accessible from the command line.
+
+### **Run the Script**
+
+To run the script in the cloned repository, run this step:
+
+```bash
+python convert_sdf_to_pqr.py --input-dir <input_directory> \
+                             --output-dir <output_directory> \
+                             --FF <forcefield>
 ```
-OUTPUT:
+    - `<input_directory>` should be the directory containing the SDF files you want to process. If not specified, it defaults to `data/pdbbind`.
+    - `<output_directory>` is the directory where the generated PQR files will be saved. If not specified, it defaults to `data/generated`.
+    - `<forcefield>` is the forcefield used for calculating charges for the PQR files. It defaults to `AMBER`.
 
-./data/generated/10gs/protein.pqr contains 6534 atoms.
-./data/generated/10gs/pocket-ligand.pqr contains 814 atoms.
-./data/generated/10gs/protein-ligand.pqr contains 6534 atoms.
 
-Protein-ligand file contains data exclusively from protein PQR file?: False
-Number of lines different in these two files: 1068
+### Example
 
-Protein-ligand file contains data exclusively from ligand PQR file?: False
-Number of lines different in these two files: 355
+Here's an example command to run the script:
 
-Are Subsets?: False
-Are Exclusively from both?: False
-Total not in subset:  1423
-```
-
-Our hypothesis is false. The `protein-ligand.pqr` file contains altered data but still contains some of the same atomic data when binding happens between the protein from `protein.pqr` and the ligand from `ligand.pqr`. While the `protein.pqr` and `protein-ligand.pqr` files contain the exact same number of atoms, the data for these atoms is different.
-
-## **Mol2 to PQR**
-
-```{bash}
-python3 mol2_to_pqr.py ./data/pdbbind/10gs/ligand.mol2 ./data/generated/10gs/protein.pqr ./data/generated/10gs/protein-ligand.pqr ./data/generated/10gs/custom.pqr
-```
+```bash
+python convert_sdf_to_pqr.py --input-dir data/pdbbind --output-dir data/output 
