@@ -72,5 +72,36 @@ python convert_sdf_to_pqr.py --input-dir data/pdbbind --output-dir data/output
 
 ## **Instructions for Creating Protein-Ligand Complex PQR Files from Individual Protein PQR and Ligand PQR Files**
 
+The `form_complex_pqr.py` script combines individual protein PQR and ligand PQR files into a single complex PQR file. It searches for pairs of PQR files in a given directory, where one file ends with `_protein.pqr` and the other ends with `_ligand.pqr`, and combines them into a new file that ends with `_combined.pqr`.
+
+### **Running the Script Manually**
+
+To run the script manually for a specific directory, use the following command:
+
+```bash
+python form_complex_pqr.py --directory ./data/generated/<PDB_ID>
+```
+
+Replace `./data/generated/<PDB_ID>` with the relative or absolute path to the directory containing the protein and ligand PQR files you want to combine.
+
+### **Running the Script with a Shell Script**
+
+To automate the process of running the `form_complex_pqr.py` script on multiple subdirectories within a root directory, you can use the provided shell script `form_complex_pqr.sh`.
+
+First, make sure the shell script is executable by running the following command:
+
+```bash
+chmod +x form_complex_pqr.sh
+```
+
+Then, run the shell script with the `--directory` argument specifying the root directory containing the subdirectories you want to process:
+
+```bash
+./run_complex_formation.sh --directory /path/to/root/directory
+```
+
+Replace `/path/to/root/directory` with the path to the root directory.
+
+The shell script will iterate through each subdirectory at level 1 of the specified root directory and run the `form_complex_pqr.py` script with each subdirectory as the `--directory` argument.
 
 
