@@ -28,6 +28,8 @@ import subprocess
 from typing import List, Dict
 from pathlib import Path
 
+from polars.datatypes.classes import Struct
+
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -160,7 +162,7 @@ def find_sdf_files(start_dir: str) -> List[Path]:
     return sdf_files
 
 
-def convert_sdf_to_pqr(input_file: str, output_file: str) -> None:
+def convert_sdf_to_pqr(input_file: str, output_file: str, forcefield: str) -> None:
     """
     Convert SDF file to PQR using Open Babel.
 
@@ -172,7 +174,9 @@ def convert_sdf_to_pqr(input_file: str, output_file: str) -> None:
     output_file : str
         Where the output .pqr file will be saved.
     """
-    subprocess.run(["obabel", "-isdf", input_file, "-opqr", "-O", output_file, "--FF", "AMBER"])
+    subprocess.run(["obabel", "-isdf", input_file,
+                              "-opqr", "-O", output_file,
+                              "--FF", forcefield])
 
 
 def update_pqr_radii(input_file: str, output_file: str) -> None:
@@ -202,7 +206,7 @@ def update_pqr_radii(input_file: str, output_file: str) -> None:
                 f.write(line)
 
 
-def process_files(sdf_files: List[Path], save_dir: str) -> None:
+def process_files(sdf_files: List[Path], save_dir: str, forcefield: str) -> None:
     """
     Process each .sdf file found.
 
@@ -223,7 +227,7 @@ def process_files(sdf_files: List[Path], save_dir: str) -> None:
         output_file = str(output_dir / f"{sdf_path.stem}.pqr")
 
         # Convert SDF to PQR
-        convert_sdf_to_pqr(input_file, output_file)
+        convert_sdf_to_pqr(input_file, output_file, forcefield)
 
         # Update radii in the PQR file, assuming temp file is the same as output for simplicity
         update_pqr_radii(output_file, output_file)
@@ -235,10 +239,12 @@ def parse_args() -> Namespace:
         help="Input directory containing .sdf files (default: data/pdbbind)")
     parser.add_argument("--output-dir", dest="output_dir", default="data/generated",
                         help="Output directory for .pqr files (default: data/generated)")
+    parser.add_argument("--FF", dest="forcefield", default="AMBER",
+                        help="Forcefield for calculating charges for .pqr files (default: AMBER)")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
     sdf_files = find_sdf_files(args.input_dir)
-    process_files(sdf_files, args.output_dir)
+    process_files(sdf_files, args.output_dir, args.forcefield)
