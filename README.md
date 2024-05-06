@@ -57,9 +57,9 @@ python convert_sdf_to_pqr.py --input-dir <input_directory> \
                              --output-dir <output_directory> \
                              --FF <forcefield>
 ```
-    - `<input_directory>` should be the directory containing the SDF files you want to process. If not specified, it defaults to `data/pdbbind`.
-    - `<output_directory>` is the directory where the generated PQR files will be saved. If not specified, it defaults to `data/generated`.
-    - `<forcefield>` is the forcefield used for calculating charges for the PQR files. It defaults to `AMBER`.
+- `<input_directory>` should be the directory containing the SDF files you want to process. If not specified, it defaults to `data/pdbbind`.
+- `<output_directory>` is the directory where the generated PQR files will be saved. If not specified, it defaults to `data/generated`.
+- `<forcefield>` is the forcefield used for calculating charges for the PQR files. It defaults to `AMBER`.
 
 
 ### Example
