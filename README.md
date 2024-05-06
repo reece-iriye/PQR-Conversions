@@ -1,4 +1,4 @@
-# **Converting Ligand files to PQR Format**
+# **Converting Protein-Ligand Complex files to PQR Format**
 
 Instructions for PQR file generation for protein-ligland binding using data from [PDB-Bind+](https://www.pdbbind-plus.org.cn/data/search). Requires PDB files to be downloaded into a `data/pdbbind/<PDB_ID>` directory, where `<PDB_ID>` reflects the complex that is being analyzed. See how I organized the `10gs` directory.
 
