@@ -70,7 +70,7 @@ Here's an example command to run the script:
 python convert_sdf_to_pqr.py --input-dir data/pdbbind --output-dir data/output
 ```
 
-## **Instructions for Creating Protein-Ligand Complex PQR Files from the Files Above**
+## **Instructions for Creating Protein-Ligand Complex PQR Files from Individual Protein PQR and Ligand PQR Files**
 
 
 
