@@ -200,8 +200,28 @@ def update_pqr_radii(input_file: str, output_file: str) -> None:
                 atom_type = parts[-1]
                 radius = _get_radius(atom_type)
                 if radius != -1:
-                    parts[-2] = "{:.6f}".format(radius)
+                    parts[-2] = f"{radius:.6f}"
+                else:
+                    parts[-2] = f"{0:.6f}"
                 f.write(" ".join(parts) + "\n")
+                # TODO:
+                # Configure whitespace for `f.write()`
+                # e.g.
+                # ```{python}
+                # f.write("{:<6}{:>5} {:>4} {:3} {:>4} {:>11.3f} {:>8.3f} {:>8.3f} {:>8.4f} {:>7.4f}\n" \
+                #     .format(
+                #         parts["recordName"],
+                #         parts["serial"],
+                #         parts["atomName"],
+                #         parts["residueName"],
+                #         int(parts["residueNumber"]),
+                #         parts["X"],
+                #         parts["Y"],
+                #         parts["Z"],
+                #         parts["charge"],
+                #         parts["radius"],
+                #     )
+                # )
             else:
                 f.write(line)
 
